@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background: url(images/bg-image.jpg) no-repeat;
+        background-size: cover;
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <form class="col-md-6 m-auto py-5">
+        <div class="input-group mb-3">
+          <input
+          id="bodyContent"
+            type="text"
+            class="form-control"
+            placeholder="Enter a location for Weather ..."
+          />
+          <div class="input-group-append">
+            <button id="search" type="button" class="btn btn-danger">Search</button>
+          </div>
+        </div>
+      </form>
+      <div class="weather-status text-white text-center">
+        <img id="icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="" />
+        <h1 id="city">Dhaka</h1>
+        <h3><span class="">38.06</span>&deg;C</h3>
+        <img src="" alt="" >
+        <h1 class="lead">Clouds</h1>
+      </div>
+    </div>
+
+    <script>
+
+    document.getElementById("search").addEventListener("click", function(){
+        const bodyContent = document.getElementById("bodyContent").value;
+        const post = {
+            body: bodyContent,
+        }
+        nowPostToServer(post)
+    })
+
+    function nowPostToServer(postInfo){
+        fetch("https://jsonplaceholder.typicode.com/posts", {
+          method: "POST",
+          body: JSON.stringify(postInfo),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+    }
+
+      const weather = {
+        apikey: "5359ce6a079af54047b742c4aeab9148",
+        fetchWeather: function (city) {
+          fetch("https://api.openweathermap.org/data/2.5/weather?q="+ city +"&units=metric&APPID=" + this.apikey)
+            .then((res) => res.json())
+            .then((data) => this.displayWeather(data))
+            .catch((err) => console.log(err));
+        },
+        displayWeather: function(data){
+            const {name} = data
+            const {icon, description} = data.weather[0];
+            const {temp, humidity} = data.main;
+            const {speed} = data.wind
+            console.log(name, icon, description, temp,humidity,speed)
+            document.getElementById("city").innerHTML = name;
+            document.getElementById("icon").src = "https://openweathermap.org/img/wn/"+ icon +".png"
+        }
+      };
+    </script>
+  </body>
+</html>
